@@ -8,10 +8,16 @@ const pool = new Pool({
   database: "barbearia",
 });
 
-async function queryExec(query) {
+async function queryExec(optQuery, query, values) {
   const cliente = await pool.connect();
-  const result = await cliente.query(query);
-  const resultQuery = result.rows;
+  const result = await cliente.query(query, values);
+
+  if (optQuery == "S") {
+    resultQuery = result.rows[0];
+  } else if (optQuery == "M") {
+    resultQuery = result.rows;
+  }
+
   cliente.release();
   return resultQuery;
 }
