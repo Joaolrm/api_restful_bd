@@ -1,3 +1,6 @@
+const { query } = require("express");
+const dataAccess = require("./data_access");
+
 let idGenerator = 2;
 let listaBarbearias = [
   {
@@ -24,6 +27,22 @@ function buscarPorId(idBarbearia) {
   }
 }
 
+async function buscarPorId_bd(idBarbearia) {
+  return dataAccess.queryExec("select * from barbearia where idbarbearia = 1");
+}
+
+async function main() {
+  try {
+    const data = await buscarPorId_bd(1);
+    console.log("Resultado:", data);
+  } catch (error) {
+    console.error("Erro:", error.message);
+  }
+}
+
+main();
+
 module.exports = {
   buscarPorId,
+  buscarPorId_bd,
 };
