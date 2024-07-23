@@ -22,15 +22,15 @@ BEGIN
 
     -- Cria a tabela
     CREATE TABLE barbearia (
-        idBarbearia SERIAL PRIMARY KEY,
-        nomeBarbearia VARCHAR(255) NOT NULL,
-        cnpj VARCHAR(18) NOT NULL,
-        horarioAbertura VARCHAR(5),
-        horarioFechamento VARCHAR(5)
+        "idBarbearia" SERIAL PRIMARY KEY,
+        "nomeBarbearia" VARCHAR(255) NOT NULL,
+        "cnpj" VARCHAR(18) NOT NULL,
+        "horarioAbertura" VARCHAR(5),
+        "horarioFechamento" VARCHAR(5)
     );
 	
 	INSERT INTO 
-		barbearia (nomeBarbearia, cnpj, horarioAbertura, horarioFechamento)
+		barbearia ("nomeBarbearia", "cnpj", "horarioAbertura", "horarioFechamento")
 	VALUES
 		('Barbel', '99.777.777/0001-66', '08:00', '18:00'),
 		('Barbearia genérica 2', '99.888.777/0001-66', '10:00', '20:00');
@@ -44,14 +44,14 @@ BEGIN
 
     -- Cria a tabela de barbeiros
     CREATE TABLE barbeiro (
-        idBarbeiro SERIAL PRIMARY KEY,
-        nomeBarbeiro VARCHAR(255) NOT NULL,
-        cpf VARCHAR(14) NOT NULL,
-        telefone VARCHAR(15)
+        "idBarbeiro" SERIAL PRIMARY KEY,
+        "nomeBarbeiro" VARCHAR(255) NOT NULL,
+        "cpf" VARCHAR(14) NOT NULL,
+        "telefone" VARCHAR(15)
     );
 	
 	INSERT INTO 
-		barbeiro (nomeBarbeiro, cpf, telefone)
+		barbeiro ("nomeBarbeiro", "cpf", "telefone")
 	VALUES
 		('Roger', '123.456.789-00', '123456789'),
 		('João', '987.654.321-00', '987654321');
@@ -64,12 +64,12 @@ BEGIN
 
     -- Cria a tabela de serviços
     CREATE TABLE servico (
-        idServico SERIAL PRIMARY KEY,
-        descricaoServico VARCHAR(255) NOT NULL
+        "idServico" SERIAL PRIMARY KEY,
+        "descricaoServico" VARCHAR(255) NOT NULL
     );
 	
 	INSERT INTO 
-		servico (descricaoServico)
+		servico ("descricaoServico")
 	VALUES
 		('Corte simples'),
 		('Sobrancelha'),
@@ -78,18 +78,18 @@ BEGIN
 		
 	    -- Cria a tabela de agendamento
     CREATE TABLE agendamento (
-        idAgendamento VARCHAR(25) NOT NULL PRIMARY KEY,
-        idBarbearia INT NOT NULL,
-        idBarbeiro INT NOT NULL,
-        idServico INT NOT NULL,
-        dataHoraServico VARCHAR(16) NOT NULL, -- Definido tamanho como 50
-        FOREIGN KEY (idBarbearia) REFERENCES barbearia (idBarbearia),
-        FOREIGN KEY (idBarbeiro) REFERENCES barbeiro (idBarbeiro),
-        FOREIGN KEY (idServico) REFERENCES servico (idServico)
+        "idAgendamento" VARCHAR(25) NOT NULL PRIMARY KEY,
+        "idBarbearia" INT NOT NULL,
+        "idBarbeiro" INT NOT NULL,
+        "idServico" INT NOT NULL,
+        "dataHoraServico" VARCHAR(16) NOT NULL, -- Definido tamanho como 50
+        FOREIGN KEY ("idBarbearia") REFERENCES barbearia ("idBarbearia"),
+        FOREIGN KEY ("idBarbeiro") REFERENCES barbeiro ("idBarbeiro"),
+        FOREIGN KEY ("idServico") REFERENCES servico ("idServico")
     );
 	
 	INSERT INTO 
-		agendamento (idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico)
+		agendamento ("idAgendamento", "idBarbearia", "idBarbeiro", "idServico", "dataHoraServico")
 	VALUES
 		('1112024-07-07-19:30', 1, 1, 1, '2024-07-07-19:30'),
 		('1212024-07-07-20:00', 1, 2, 1, '2024-07-07-20:00'),
@@ -98,18 +98,18 @@ BEGIN
 
         -- Cria a tabela de valorServico
     CREATE TABLE valorServico (
-        idValorServico VARCHAR(9) NOT NULL PRIMARY KEY,
-        idBarbearia INT NOT NULL,
-        idBarbeiro INT NOT NULL,
-        idServico INT NOT NULL,
-        valorServico VARCHAR(10) NOT NULL,
-        FOREIGN KEY (idBarbearia) REFERENCES barbearia (idBarbearia),
-        FOREIGN KEY (idBarbeiro) REFERENCES barbeiro (idBarbeiro),
-        FOREIGN KEY (idServico) REFERENCES servico (idServico)
+        "idValorServico" VARCHAR(9) NOT NULL PRIMARY KEY,
+        "idBarbearia" INT NOT NULL,
+        "idBarbeiro" INT NOT NULL,
+        "idServico" INT NOT NULL,
+        "valorServico" VARCHAR(10) NOT NULL,
+        FOREIGN KEY ("idBarbearia") REFERENCES barbearia ("idBarbearia"),
+        FOREIGN KEY ("idBarbeiro") REFERENCES barbeiro ("idBarbeiro"),
+        FOREIGN KEY ("idServico") REFERENCES servico ("idServico")
     );
     
     INSERT INTO 
-        valorServico (idValorServico, idBarbearia, idBarbeiro, idServico, valorServico)
+        valorServico ("idValorServico", "idBarbearia", "idBarbeiro", "idServico", "valorServico")
     VALUES
         ('111', 1, 1, 1, '20,00'),
         ('121', 1, 2, 1, '20,00'),

@@ -2,8 +2,8 @@ const barbeiro_repository = require('./barbeiro_repository');
 
 test("Function buscarPorId", () => {
     let barbeiroEsperado = {
-        idbarbeiro: 1,
-        nomebarbeiro: "Roger",
+        idBarbeiro: 1,
+        nomeBarbeiro: "Roger",
         cpf: "123.456.789-00",
         telefone: "123456789"
     };

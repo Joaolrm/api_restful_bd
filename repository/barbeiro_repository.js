@@ -1,7 +1,7 @@
 const dataAccess = require("./data_access");
 
 async function buscarPorId(idBarbeiro) {
-  resultSet = dataAccess.queryExec("S", "select * from barbeiro where idbarbeiro = $1", [idBarbeiro]);
+  resultSet = dataAccess.queryExec("S", 'select * from barbeiro where "idBarbeiro" = $1', [idBarbeiro]);
   return resultSet;
 }
 

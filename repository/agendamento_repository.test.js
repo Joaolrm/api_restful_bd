@@ -3,32 +3,32 @@ const agendamento_repository = require("./agendamento_repository");
 test("Function listar", () => {
   let listaEsperadaDoListar = [
     {
-      idbarbearia: 1,
-      idbarbeiro: 1,
-      idservico: 1,
-      datahoraservico: "2024-07-07-19:30",
-      idagendamento: "1112024-07-07-19:30",
+      idBarbearia: 1,
+      idBarbeiro: 1,
+      idServico: 1,
+      dataHoraServico: "2024-07-07-19:30",
+      idAgendamento: "1112024-07-07-19:30",
     },
     {
-      idbarbearia: 1,
-      idbarbeiro: 2,
-      idservico: 1,
-      datahoraservico: "2024-07-07-20:00",
-      idagendamento: "1212024-07-07-20:00",
+      idBarbearia: 1,
+      idBarbeiro: 2,
+      idServico: 1,
+      dataHoraServico: "2024-07-07-20:00",
+      idAgendamento: "1212024-07-07-20:00",
     },
     {
-      idbarbearia: 1,
-      idbarbeiro: 1,
-      idservico: 1,
-      datahoraservico: "2024-07-08-19:30",
-      idagendamento: "1112024-07-08-19:30",
+      idBarbearia: 1,
+      idBarbeiro: 1,
+      idServico: 1,
+      dataHoraServico: "2024-07-08-19:30",
+      idAgendamento: "1112024-07-08-19:30",
     },
     {
-      idbarbearia: 1,
-      idbarbeiro: 2,
-      idservico: 1,
-      datahoraservico: "2024-07-08-19:30",
-      idagendamento: "1212024-07-08-19:30",
+      idBarbearia: 1,
+      idBarbeiro: 2,
+      idServico: 1,
+      dataHoraServico: "2024-07-08-19:30",
+      idAgendamento: "1212024-07-08-19:30",
     },
   ];
 
@@ -37,6 +37,40 @@ test("Function listar", () => {
     expect(resultado).toHaveLength(4);
   });
 });
+
+test("Function buscarPorId", () => {
+  let agendamentoEsperado = {
+    dataHoraServico: "2024-07-07-19:30",
+    idAgendamento: "1112024-07-07-19:30",
+    idBarbearia: 1,
+    idBarbeiro: 1,
+    idServico: 1,
+  };
+
+  return agendamento_repository
+    .buscarPorId("1112024-07-07-19:30")
+    .then((resultado) => {
+      expect(resultado).toEqual(agendamentoEsperado);
+    });
+});
+
+// test("Function inserir", () => {
+//   const agendamentoInseridoEsperado = {
+//     idBarbearia: 1,
+//     idBarbeiro: 2,
+//     idServico: 1,
+//     dataHoraServico: "2024-07-09-09:30",
+//   };
+
+//   return agendamento_repository
+//     .inserir(agendamentoInseridoEsperado)
+//     .then(async () => {
+//       listaAgendamentos = await agendamento_repository.listar();
+//     }).then(() => {
+//       expect(listaAgendamentos).toContainEqual(agendamentoInseridoEsperado);
+//     })
+//     ;
+// });
 
 // test("Function buscarPorData", () => {
 //   let listaEsperadaBuscarPorData = [
@@ -134,21 +168,6 @@ test("Function listar", () => {
 //       servicoRealizadoAnterior.dataHoraServico
 //     )
 //   ).toBeUndefined();
-// });
-
-// test("Function inserir", () => {
-//   const servicoRealizadoInseridoEsperado = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-09-09:30",
-//   };
-
-//   servicoRealizado_repository.inserir(servicoRealizadoInseridoEsperado);
-
-//   expect(servicoRealizado_repository.listar()).toContainEqual(
-//     servicoRealizadoInseridoEsperado
-//   );
 // });
 
 // test("Function deletar", () => {

@@ -4,16 +4,35 @@ const barbearia_repository = require("./barbearia_repository");
 const barbeiro_repository = require("./barbeiro_repository");
 const valorServico_repository = require("./valorServico_repository");
 
-
-function listar() {
+async function listar() {
   resultSet = dataAccess.queryExec("M", "select * from agendamento");
   return resultSet;
 }
 
-// function inserir(servicoRealizado) {
-//   listaServicosRealizados.push(servicoRealizado);
-//   return servicoRealizado;
+// async function inserir(agendamento) {
+//   const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamento;
+//   const idAgendamento = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
+
+//   resultSet = dataAccess.queryExec(
+//     "S",
+//     `INSERT INTO
+// 		  agendamento (idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico)
+// 	  VALUES
+//       ($1, $2, $3, $4, $5)
+//     RETURNING *`,
+//     [idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico]
+//   );
+//   return resultSet;
 // }
+
+async function buscarPorId(idAgendamento) {
+  resultSet = dataAccess.queryExec(
+    "S",
+    'select * from agendamento where "idAgendamento" = $1',
+    [idAgendamento]
+  );
+  return resultSet;
+}
 
 // function buscarPorData(data) {
 //   let sevicosRealizadosNaData = [];
@@ -118,9 +137,9 @@ function listar() {
 
 module.exports = {
   listar,
+  buscarPorId,
   // inserir,
   // atualizar,
   // deletar,
-  // buscarPorKeyTabela,
   // buscarPorData,
 };

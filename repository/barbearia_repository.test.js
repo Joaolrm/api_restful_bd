@@ -2,11 +2,11 @@ const barbearia_repository = require("./barbearia_repository");
 
 test("Function buscarPorId", () => {
   let barbeariaEsperada = {
-    idbarbearia: 1,
-    nomebarbearia: "Barbel",
+    idBarbearia: 1,
+    nomeBarbearia: "Barbel",
     cnpj: "99.777.777/0001-66",
-    horarioabertura: "08:00",
-    horariofechamento: "18:00",
+    horarioAbertura: "08:00",
+    horarioFechamento: "18:00",
   };
 
   return barbearia_repository.buscarPorId(1).then((resultado) => {
