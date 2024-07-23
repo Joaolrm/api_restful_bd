@@ -8,14 +8,22 @@ const pool = new Pool({
   database: "barbearia",
 });
 
-async function queryExec(optQuery, query, values) {
+async function queryExec(optQuery, query, optional) {
   const cliente = await pool.connect();
-  const result = await cliente.query(query, values);
-
-  if (optQuery == "S") {
-    resultQuery = result.rows[0];
-  } else if (optQuery == "M") {
-    resultQuery = result.rows;
+  const result = await cliente.query(query, optional.value);
+  
+  if (optional.mapFunction) {
+    if (optQuery == "S") {
+      resultQuery = result.rows[0].map(optional.mapFunction);
+    } else if (optQuery == "M") {
+      resultQuery = result.rows.map(optional.mapFunction);
+    }
+  } else {
+    if (optQuery == "S") {
+      resultQuery = result.rows[0];
+    } else if (optQuery == "M") {
+      resultQuery = result.rows;
+    }
   }
 
   cliente.release();

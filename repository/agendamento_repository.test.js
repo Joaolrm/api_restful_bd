@@ -54,23 +54,35 @@ test("Function buscarPorId", () => {
     });
 });
 
-// test("Function inserir", () => {
-//   const agendamentoInseridoEsperado = {
-//     idBarbearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-09-09:30",
-//   };
+test("Function inserir", () => {
+  const agendamentoInserido = {
+    idBarbearia: 1,
+    idBarbeiro: 2,
+    idServico: 1,
+    dataHoraServico: "2024-07-09-09:30",
+  };
 
-//   return agendamento_repository
-//     .inserir(agendamentoInseridoEsperado)
-//     .then(async () => {
-//       listaAgendamentos = await agendamento_repository.listar();
-//     }).then(() => {
-//       expect(listaAgendamentos).toContainEqual(agendamentoInseridoEsperado);
-//     })
-//     ;
-// });
+  const agendamentoInseridoEsperado = {
+    idBarbearia: 1,
+    idBarbeiro: 2,
+    idServico: 1,
+    dataHoraServico: "2024-07-09-09:30",
+    idAgendamento: "1212024-07-09-09:30",
+  };
+
+  const idAgendamento = `${agendamentoInseridoEsperado.idBarbearia}${agendamentoInseridoEsperado.idBarbeiro}${agendamentoInseridoEsperado.idServico}${agendamentoInseridoEsperado.dataHoraServico}`;
+
+  return agendamento_repository
+    .inserir(agendamentoInserido)
+    .then(async () => {
+      return agendamento = await agendamento_repository.buscarPorId(
+        idAgendamento
+      );
+    })
+    .then(() => {
+      expect(agendamento).toEqual(agendamentoInseridoEsperado);
+    });
+});
 
 // test("Function buscarPorData", () => {
 //   let listaEsperadaBuscarPorData = [

@@ -5,80 +5,134 @@ const barbeiro_repository = require("./barbeiro_repository");
 const valorServico_repository = require("./valorServico_repository");
 
 async function listar() {
-  resultSet = dataAccess.queryExec("M", "select * from agendamento");
+  let optional = {};
+  resultSet = dataAccess.queryExec("M", "select * from agendamento", optional);
   return resultSet;
 }
 
-// async function inserir(agendamento) {
-//   const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamento;
-//   const idAgendamento = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
-
-//   resultSet = dataAccess.queryExec(
-//     "S",
-//     `INSERT INTO
-// 		  agendamento (idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico)
-// 	  VALUES
-//       ($1, $2, $3, $4, $5)
-//     RETURNING *`,
-//     [idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico]
-//   );
-//   return resultSet;
-// }
-
 async function buscarPorId(idAgendamento) {
+  let optional = {};
+  optional.value = [idAgendamento];
   resultSet = dataAccess.queryExec(
     "S",
     'select * from agendamento where "idAgendamento" = $1',
-    [idAgendamento]
+    optional
   );
   return resultSet;
 }
 
-// function buscarPorData(data) {
-//   let sevicosRealizadosNaData = [];
-//   for (let servicoRealizado of listaServicosRealizados) {
-//     if (servicoRealizado.dataHoraServico.substring(0, 10) == data) {
-//       let descricaoServico = servico_repository.buscarPorId(
-//         servicoRealizado.idServico
-//       );
-//       let valorServico = valorServico_repository.buscarPorKeyTabela(
-//         servicoRealizado.idBabearia,
-//         servicoRealizado.idBarbeiro,
-//         servicoRealizado.idServico
-//       );
-//       let barbeiro = barbeiro_repository.buscarPorId(
-//         servicoRealizado.idBarbeiro
-//       );
-//       let barbearia = barbearia_repository.buscarPorId(
-//         servicoRealizado.idBabearia
-//       );
+async function inserir(agendamento) {
+  const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamento;
+  const idAgendamento = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
 
-//       let servico = servico_repository.buscarPorId(servicoRealizado.idServico);
+  let optional = {};
+  optional.value = [
+    idAgendamento,
+    idBarbearia,
+    idBarbeiro,
+    idServico,
+    dataHoraServico,
+  ];
 
-//       let servicoRealizadoCopy = {};
+  resultSet = dataAccess.queryExec(
+    "S",
+    `INSERT INTO
+		  agendamento ("idAgendamento", "idBarbearia", "idBarbeiro", "idServico", "dataHoraServico")
+	  VALUES
+      ($1, $2, $3, $4, $5)
+    RETURNING *`,
+    optional
+  );
+  return resultSet;
+}
 
-//       servicoRealizadoCopy.servico = {
-//         idServico: servicoRealizado.idServico,
-//         dataHoraServico: servicoRealizado.dataHoraServico,
-//         descricaoServico: servico.descricaoServico,
-//         valorServico: valorServico.valorServico,
-//       };
+async function buscarPorData(data) {
+  const query = `
+  select 
+    agendamento."idAgendamento"
+    ,agendamento."dataHoraServico"
+    ,agendamento."idBarbearia"
+    ,barbearia."nomeBarbearia"
+    ,barbearia."cnpj"
+    ,barbearia."horarioAbertura"
+    ,barbearia."horarioFechamento"
+    ,agendamento."idBarbeiro"
+    ,barbeiro."nomeBarbeiro"
+    ,barbeiro."cpf"
+    ,barbeiro."telefone"
+    ,agendamento."idServico"
+    ,servico."descricaoServico"
+    ,valorservico."idValorServico"
+    ,valorservico."valorServico"
+  from 
+    agendamento
+  inner join
+    barbearia
+    on 
+      barbearia."idBarbearia" = agendamento."idBarbearia"
+  inner join
+    barbeiro
+    on 
+      barbeiro."idBarbeiro" = agendamento."idBarbeiro"
+  inner join
+    servico
+    on 
+      servico."idServico" = agendamento."idServico"
+  inner join
+    valorservico
+    on 
+      valorservico."idBarbearia" = agendamento."idBarbearia"
+      and valorservico."idBarbeiro" = agendamento."idBarbeiro"
+      and valorservico."idServico" = agendamento."idServico"
+  where 
+    "dataHoraServico" like $1
+  `;
 
-//       servicoRealizadoCopy.barbeiro = {
-//         idBarbeiro: barbeiro.idBarbeiro,
-//         nomeBarbeiro: barbeiro.nomeBarbeiro,
-//       };
+  function mapFunction(agendamento) {
+    return {
+      idAgendamento: agendamento.idAgendamento,
+      barbearia: {
+        idBarbearia: agendamento.idBarbearia,
+        nomeBarbearia: agendamento.nomeBarbearia,
+        cnpj: agendamento.cnpj,
+        horarioAbertura: agendamento.horarioAbertura,
+        horarioFechamento: agendamento.horarioFechamento,
+      },
+      barbeiro: {
+        idBarbeiro: agendamento.idBarbeiro,
+        nomeBarbeiro: agendamento.nomeBarbeiro,
+        cpf: agendamento.cpf,
+        telefone: agendamento.telefone,
+      },
+      servico: {
+        idServico: agendamento.idServico,
+        descricaoServico: agendamento.descricaoServico,
+      },
+      valorServico: {
+        idValorServico: agendamento.idValorServico,
+        valorServico: agendamento.valorServico,
+      },
+    };
+  }
 
-//       servicoRealizadoCopy.barbearia = {
-//         idBabearia: servicoRealizado.idBabearia,
-//         nomeBarbearia: barbearia.nomeBarbearia,
-//       };
+  let optional = {};
+  optional.value = [data];
+  optional.mapFunction = mapFunction;
 
-//       sevicosRealizadosNaData.push(servicoRealizadoCopy);
-//     }
-//   }
-//   return sevicosRealizadosNaData;
-// }
+  resultSet = dataAccess.queryExec("M", query, optional);
+  return resultSet;
+}
+
+async function main() {
+  try {
+    const data = await buscarPorData("2024-07-07%");
+    console.log("Resultado:", data);
+  } catch (error) {
+    console.error("Erro:", error.message);
+  }
+}
+
+main();
 
 // function buscarPorKeyTabela(
 //   idBabearia,
@@ -138,8 +192,8 @@ async function buscarPorId(idAgendamento) {
 module.exports = {
   listar,
   buscarPorId,
-  // inserir,
+  inserir,
+  buscarPorData,
   // atualizar,
   // deletar,
-  // buscarPorData,
 };
