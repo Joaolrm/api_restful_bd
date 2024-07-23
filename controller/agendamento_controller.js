@@ -37,14 +37,14 @@ async function buscarPorId(req, res) {
 }
 
 async function atualizar(req, res) {
-  const agendamentoAlterado = req.body;
+  const agendamento = req.body;
   const idAgendamento = req.params.idAgendamento;
   try {
-    let servicoRealizadoAlterado = await agendamento_service.atualizar(
+    let agendamentoAlterado = await agendamento_service.atualizar(
       idAgendamento,
-      agendamentoAlterado
+      agendamento
     );
-    res.json(servicoRealizadoAlterado);
+    res.json(agendamentoAlterado);
   } catch (err) {
     res.status(err.id).json(err);
   }

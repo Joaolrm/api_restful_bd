@@ -86,6 +86,7 @@ async function inserir(agendamento) {
 async function atualizar(idAgendamento, agendamentoAlterado) {
   const { idBarbearia, idBarbeiro, idServico, dataHoraServico } =
     agendamentoAlterado;
+  const idAgendamentoAtualizado = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
 
   let barbearia = await barbearia_repository.buscarPorId(idBarbearia);
   let horarioFuncionamentoBarbearia = {
@@ -102,7 +103,8 @@ async function atualizar(idAgendamento, agendamentoAlterado) {
     idServico &&
     dataHoraServico
   ) {
-    if (agendamento_repository.buscarPorId(idAgendamento)) {
+    let agendamentoExitente = await agendamento_repository.buscarPorId(idAgendamentoAtualizado);
+    if (agendamentoExitente) {
       throw {
         id: 400,
         message: "Já existe um agendamento identico a tentativa de alteração",
