@@ -1,97 +1,64 @@
-// const servicoRealizado_service = require("./servicoRealizado_service");
+const agendamento_service = require("./agendamento_service");
 
-// test("Funciton listar", () => {
-//   let listaDeServicosRealizados = [
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 1,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-07-19:30",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-07-20:00",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 1,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-08-19:30",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-08-19:30",
-//     },
-//   ];
-//   expect(servicoRealizado_service.listar()).toEqual(listaDeServicosRealizados);
-// });
+test("Function buscarPorId", () => {
+  const agendamentoEsperado = {
+    idBarbearia: 1,
+    idBarbeiro: 1,
+    idServico: 1,
+    dataHoraServico: "2024-07-07-19:30",
+    idAgendamento: "1112024-07-07-19:30",
+  };
 
-// test("Function buscarPorKeyTabela", () => {
-//   let servicoRealizadoEsperado = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-07-20:00",
-//   };
+  return agendamento_service
+    .buscarPorId(agendamentoEsperado.idAgendamento)
+    .then((resultado) => {
+      expect(resultado).toEqual(agendamentoEsperado);
+    });
+});
 
-//   const resultado = servicoRealizado_service.buscarPorKeyTabela(
-//     1,
-//     2,
-//     1,
-//     "2024-07-07-20:00"
-//   );
-
-//   expect(resultado).toEqual(servicoRealizadoEsperado);
-
-//   expect(() =>
-//     servicoRealizado_service.buscarPorKeyTabela(1, 8, 1, "2024-07-07-20:00")
-//   ).toThrow();
-// });
-
-// test("Função buscarPorData", () => {
-//   let servicosRealizadosEsperados = [
-//     {
-//       barbearia: {
-//         idBabearia: 1,
-//         nomeBarbearia: "Barbel",
-//       },
-//       barbeiro: {
-//         idBarbeiro: 1,
-//         nomeBarbeiro: "Roger",
-//       },
-//       servico: {
-//         idServico: 1,
-//         dataHoraServico: "2024-07-07-19:30",
-//         descricaoServico: "Corte simples",
-//         valorServico: "20,00",
-//       },
-//     },
-//     {
-//       barbearia: {
-//         idBabearia: 1,
-//         nomeBarbearia: "Barbel",
-//       },
-//       barbeiro: {
-//         idBarbeiro: 2,
-//         nomeBarbeiro: "João",
-//       },
-//       servico: {
-//         idServico: 1,
-//         dataHoraServico: "2024-07-07-20:00",
-//         descricaoServico: "Corte simples",
-//         valorServico: "20,00",
-//       },
-//     },
-//   ];
-//   expect(servicoRealizado_service.buscarPorData("2024-07-07")).toEqual(
-//     servicosRealizadosEsperados
-//   );
-//   expect(() => servicoRealizado_service.buscarPorData("2024-07-15")).toThrow();
-// });
+test("Função buscarPorData", () => {
+  let servicosRealizadosEsperados = [
+    {
+      idAgendamento: "1112024-07-07-19:30",
+      barbearia: {
+        idBarbearia: 1,
+        nomeBarbearia: "Barbel",
+        cnpj: "99.777.777/0001-66",
+        horarioAbertura: "08:00",
+        horarioFechamento: "18:00",
+      },
+      barbeiro: {
+        idBarbeiro: 1,
+        nomeBarbeiro: "Roger",
+        cpf: "123.456.789-00",
+        telefone: "123456789",
+      },
+      servico: { idServico: 1, descricaoServico: "Corte simples" },
+      valorServico: { idValorServico: "111", valorServico: "20,00" },
+    },
+    {
+      idAgendamento: "1212024-07-07-20:00",
+      barbearia: {
+        idBarbearia: 1,
+        nomeBarbearia: "Barbel",
+        cnpj: "99.777.777/0001-66",
+        horarioAbertura: "08:00",
+        horarioFechamento: "18:00",
+      },
+      barbeiro: {
+        idBarbeiro: 2,
+        nomeBarbeiro: "João",
+        cpf: "987.654.321-00",
+        telefone: "987654321",
+      },
+      servico: { idServico: 1, descricaoServico: "Corte simples" },
+      valorServico: { idValorServico: "121", valorServico: "20,00" },
+    },
+  ];
+  return agendamento_service.buscarPorData("2024-07-07").then((resultado) => {
+    expect(resultado).toEqual(servicosRealizadosEsperados);
+  });
+});
 
 // test("Função inserir", () => {
 //   let casoFuncional = {
@@ -228,7 +195,6 @@
 //     )
 //   ).toThrow();
 
-
 //   // Já existente
 //   let casoFalho3 = {
 //     servicoAAtualizar: {
@@ -255,7 +221,6 @@
 //     )
 //   ).toThrow();
 
-
 //   //Fração faltando
 //   let casoFalho4 = {
 //     servicoAAtualizar: {
@@ -281,7 +246,6 @@
 //     )
 //   ).toThrow();
 
-
 //     //Fração id servico inexistente
 //     let casoFalho5 = {
 //       servicoAAtualizar: {
@@ -297,7 +261,7 @@
 //         dataHoraServico: "2024-07-08-19:30",
 //       },
 //     };
-  
+
 //     expect(() =>
 //       servicoRealizado_service.atualizar(
 //         casoFalho5.servicoAAtualizar.idBabearia,

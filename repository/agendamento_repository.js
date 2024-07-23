@@ -1,19 +1,19 @@
 const dataAccess = require("./data_access");
-const servico_repository = require("./servico_repository");
-const barbearia_repository = require("./barbearia_repository");
-const barbeiro_repository = require("./barbeiro_repository");
-const valorServico_repository = require("./valorServico_repository");
 
 async function listar() {
   let optional = {};
-  resultSet = dataAccess.queryExec("M", "select * from agendamento", optional);
+  resultSet = await dataAccess.queryExec(
+    "M",
+    "select * from agendamento",
+    optional
+  );
   return resultSet;
 }
 
 async function buscarPorId(idAgendamento) {
   let optional = {};
   optional.value = [idAgendamento];
-  resultSet = dataAccess.queryExec(
+  resultSet = await dataAccess.queryExec(
     "S",
     'select * from agendamento where "idAgendamento" = $1',
     optional
@@ -34,7 +34,7 @@ async function inserir(agendamento) {
     dataHoraServico,
   ];
 
-  resultSet = dataAccess.queryExec(
+  resultSet = await dataAccess.queryExec(
     "S",
     `INSERT INTO
 		  agendamento ("idAgendamento", "idBarbearia", "idBarbeiro", "idServico", "dataHoraServico")
@@ -119,14 +119,14 @@ async function buscarPorData(data) {
   optional.value = [data + "%"];
   optional.mapFunction = mapFunction;
 
-  resultSet = dataAccess.queryExec("M", query, optional);
+  resultSet = await dataAccess.queryExec("M", query, optional);
   return resultSet;
 }
 
 async function deletar(idAgendamento) {
   let optional = {};
   optional.value = [idAgendamento];
-  resultSet = dataAccess.queryExec(
+  resultSet = await dataAccess.queryExec(
     "S",
     'delete from agendamento where "idAgendamento" = $1 returning * ',
     optional
@@ -135,7 +135,8 @@ async function deletar(idAgendamento) {
 }
 
 async function atualizar(idAgendamento, agendamentoAlterado) {
-  const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamentoAlterado;
+  const { idBarbearia, idBarbeiro, idServico, dataHoraServico } =
+    agendamentoAlterado;
   const idAgendamentoAlterado = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
   let optional = {};
   optional.value = [
@@ -149,7 +150,7 @@ async function atualizar(idAgendamento, agendamentoAlterado) {
 
   let agendamento = await buscarPorId(idAgendamento);
   if (agendamento) {
-    resultSet = dataAccess.queryExec(
+    resultSet = await dataAccess.queryExec(
       "S",
       `UPDATE 
         agendamento
