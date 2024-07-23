@@ -150,8 +150,8 @@ async function atualizar(idAgendamento, agendamentoAlterado) {
   };
 }
 
-function deletar(idAgendamento, dataHoraServico) {
-  const agendamento = agendamento_repository.deletar(
+async function deletar(idAgendamento, dataHoraServico) {
+  const agendamento = await agendamento_repository.deletar(
     idAgendamento,
     dataHoraServico
   );
