@@ -10,23 +10,23 @@ const pool = new Pool({
 
 async function queryExec(optQuery, query, optional) {
   const cliente = await pool.connect();
-  const result = await cliente.query(query, optional.value);
-  
-  if (optional.mapFunction) {
-    if (optQuery == "S") {
-      resultQuery = result.rows[0].map(optional.mapFunction);
-    } else if (optQuery == "M") {
-      resultQuery = result.rows.map(optional.mapFunction);
+  let resultQuery;
+  try {
+    const result = await cliente.query(query, optional.value);
+    if (optional.mapFunction) {
+      resultQuery =
+        optQuery == "S"
+          ? result.rows[0].map(optional.mapFunction)
+          : result.rows.map(optional.mapFunction);
+    } else {
+      resultQuery = optQuery == "S" ? result.rows[0] : result.rows;
     }
-  } else {
-    if (optQuery == "S") {
-      resultQuery = result.rows[0];
-    } else if (optQuery == "M") {
-      resultQuery = result.rows;
-    }
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  } finally {
+    cliente.release();
   }
-
-  cliente.release();
   return resultQuery;
 }
 

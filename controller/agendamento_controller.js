@@ -1,46 +1,46 @@
 const agendamento_service = require("../service/agendamento_service");
 
-function listar(req, res) {
-  res.json(agendamento_service.listar());
+async function listar(req, res) {
+  res.json(await agendamento_service.listar());
 }
 
-function inserir(req, res) {
+async function inserir(req, res) {
   let agendamento = req.body;
 
   try {
-    const agendamentoInserido = agendamento_service.inserir(agendamento);
+    const agendamentoInserido = await agendamento_service.inserir(agendamento);
     res.status(201).json(agendamentoInserido);
   } catch (err) {
     res.status(err.id).json(err);
   }
 }
 
-function buscarPorData(req, res) {
+async function buscarPorData(req, res) {
   const data = req.params.data;
   try {
-    const servicosRealizadosPorData = agendamento_service.buscarPorData(data);
+    const servicosRealizadosPorData = await agendamento_service.buscarPorData(data);
     res.json(servicosRealizadosPorData);
   } catch (err) {
     res.status(err.id).json(err);
   }
 }
 
-function buscarPorId(req, res) {
+async function buscarPorId(req, res) {
   const idAgendamento = req.params.idAgendamento;
   try {
-    const servicoRealizadoPorKey =
-      agendamento_service.buscarPorId(idAgendamento);
-    res.json(servicoRealizadoPorKey);
+    const agendamento =
+      await agendamento_service.buscarPorId(idAgendamento);
+    res.json(agendamento);
   } catch (err) {
     res.status(err.id).json(err);
   }
 }
 
-function atualizar(req, res) {
+async function atualizar(req, res) {
   const agendamentoAlterado = req.body;
   const idAgendamento = req.params.idAgendamento;
   try {
-    let servicoRealizadoAlterado = agendamento_service.atualizar(
+    let servicoRealizadoAlterado = await agendamento_service.atualizar(
       idAgendamento,
       agendamentoAlterado
     );
@@ -50,10 +50,10 @@ function atualizar(req, res) {
   }
 }
 
-function deletar(req, res) {
+async function deletar(req, res) {
   const idAgendamento = req.params.idAgendamento;
   try {
-    const servicoRealizadoDeletado = agendamento_service.deletar(idAgendamento);
+    const servicoRealizadoDeletado = await agendamento_service.deletar(idAgendamento);
     res.json(servicoRealizadoDeletado);
   } catch (err) {
     res.status(err.id).json(err);

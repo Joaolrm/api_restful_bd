@@ -47,7 +47,7 @@ async function inserir(agendamento) {
 }
 
 async function buscarPorData(data) {
-  const query = `
+  let query = `
   select 
     agendamento."idAgendamento"
     ,agendamento."dataHoraServico"
