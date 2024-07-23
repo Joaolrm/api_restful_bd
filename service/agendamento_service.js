@@ -49,15 +49,18 @@ async function inserir(agendamento) {
     if (agendamentoExitente) {
       throw { id: 400, message: "Agendamento já existe" };
     } else {
+      let servico = await servico_repository.buscarPorId(idServico);
+      let barbeiro = await barbeiro_repository.buscarPorId(idBarbeiro);
+      let barbearia = await barbearia_repository.buscarPorId(idBarbearia);
       if (
         agendamento &&
-        agendamento.idBarbearia &&
-        agendamento.idBarbeiro &&
-        agendamento.idServico &&
-        agendamento.dataHoraServico &&
-        servico_repository.buscarPorId(agendamento.idServico) &&
-        barbeiro_repository.buscarPorId(agendamento.idBarbeiro) &&
-        barbearia_repository.buscarPorId(agendamento.idBabearia)
+        idBarbearia &&
+        idBarbeiro &&
+        idServico &&
+        dataHoraServico &&
+        servico &&
+        barbeiro &&
+        barbearia
       ) {
         try {
           return await agendamento_repository.inserir(agendamento);
