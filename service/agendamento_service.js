@@ -32,9 +32,7 @@ async function buscarPorData(data) {
 async function inserir(agendamento) {
   const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamento;
   const idAgendamento = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
-  let barbearia = await barbearia_repository.buscarPorId(
-    agendamento.idBarbearia
-  );
+  let barbearia = await barbearia_repository.buscarPorId(idBarbearia);
   let horarioFuncionamentoBarbearia = {
     abertura: barbearia.horarioAbertura,
     fechamento: barbearia.horarioFechamento,
@@ -82,109 +80,88 @@ async function inserir(agendamento) {
   }
 }
 
-// function atualizar(
-//   idBabearia,
-//   idBarbeiro,
-//   idServico,
-//   dataHoraServico,
-//   agendamentoAlterado
-// ) {
-//   let horarioFuncionamentoBarbearia = {
-//     abertura: barbearia_repository.buscarPorId(
-//       agendamentoAlterado.idBabearia
-//     ).horarioAbertura,
-//     fechamento: barbearia_repository.buscarPorId(
-//       agendamentoAlterado.idBabearia
-//     ).horarioFechamento,
-//   };
+async function atualizar(idAgendamento, agendamentoAlterado) {
+  const { idBarbearia, idBarbeiro, idServico, dataHoraServico } =
+    agendamentoAlterado;
 
-//   let horaMinAgendamento =
-//     agendamentoAlterado.dataHoraServico.substring(11);
+  let barbearia = await barbearia_repository.buscarPorId(idBarbearia);
+  let horarioFuncionamentoBarbearia = {
+    abertura: barbearia.horarioAbertura,
+    fechamento: barbearia.horarioFechamento,
+  };
 
-//   if (
-//     agendamentoAlterado &&
-//     agendamentoAlterado.idBabearia &&
-//     agendamentoAlterado.idBarbeiro &&
-//     agendamentoAlterado.idServico &&
-//     agendamentoAlterado.dataHoraServico
-//   ) {
-//     if (
-//       agendamento_repository.buscarPorKeyTabela(
-//         agendamentoAlterado.idBabearia,
-//         agendamentoAlterado.idBarbeiro,
-//         agendamentoAlterado.idServico,
-//         agendamentoAlterado.dataHoraServico
-//       )
-//     ) {
-//       throw {
-//         id: 400,
-//         message:
-//           "Já existe um serviço realizado identico a tentativa de alteração",
-//       };
-//     } else {
-//       if (
-//         servico_repository.buscarPorId(agendamentoAlterado.idServico) &&
-//         barbeiro_repository.buscarPorId(agendamentoAlterado.idBarbeiro) &&
-//         barbearia_repository.buscarPorId(agendamentoAlterado.idBabearia)
-//       ) {
-//         if (
-//           horaMinAgendamento > horarioFuncionamentoBarbearia.abertura &&
-//           horaMinAgendamento < horarioFuncionamentoBarbearia.fechamento
-//         ) {
-//           agendamentoAlterado = agendamento_repository.atualizar(
-//             idBabearia,
-//             idBarbeiro,
-//             idServico,
-//             dataHoraServico,
-//             agendamentoAlterado
-//           );
-//           if (agendamentoAlterado) {
-//             return agendamentoAlterado;
-//           } else {
-//             throw { id: 404, message: "Chave composta não localizada" };
-//           }
-//         } else {
-//           throw {
-//             id: 422,
-//             message:
-//               "Serviço realizado não pode ser inserido fora do horário de funcionamento da barbearia",
-//           };
-//         }
-//       } else {
-//         throw {
-//           id: 400,
-//           message:
-//             "Serviço realizado alterado não possui um id de serviço cadastrado na base",
-//         };
-//       }
-//     }
-//   }
+  let horaMinAgendamento = agendamentoAlterado.dataHoraServico.substring(11);
 
-//   throw {
-//     id: 400,
-//     message: "Serviço realizado alterado não possui data hora ou id de serviço",
-//   };
-// }
+  if (
+    agendamentoAlterado &&
+    idBarbearia &&
+    idBarbeiro &&
+    idServico &&
+    dataHoraServico
+  ) {
+    if (agendamento_repository.buscarPorId(idAgendamento)) {
+      throw {
+        id: 400,
+        message: "Já existe um agendamento identico a tentativa de alteração",
+      };
+    } else {
+      let servico = await servico_repository.buscarPorId(idServico);
+      let barbeiro = await barbeiro_repository.buscarPorId(idBarbeiro);
+      let barbearia = await barbearia_repository.buscarPorId(idBarbearia);
+      if (servico && barbeiro && barbearia) {
+        if (
+          horaMinAgendamento > horarioFuncionamentoBarbearia.abertura &&
+          horaMinAgendamento < horarioFuncionamentoBarbearia.fechamento
+        ) {
+          agendamentoAlterado = await agendamento_repository.atualizar(
+            idAgendamento,
+            agendamentoAlterado
+          );
+          if (agendamentoAlterado) {
+            return agendamentoAlterado;
+          } else {
+            throw { id: 404, message: "Agendamento não localizado" };
+          }
+        } else {
+          throw {
+            id: 422,
+            message:
+              "Agendamento não pode ser inserido fora do horário de funcionamento da barbearia",
+          };
+        }
+      } else {
+        throw {
+          id: 400,
+          message:
+            "Agendamento alterado não possui um dos campos cadastrado na base",
+        };
+      }
+    }
+  }
 
-// function deletar(idBabearia, idBarbeiro, idServico, dataHoraServico) {
-//   const agendamento = agendamento_repository.deletar(
-//     idBabearia,
-//     idBarbeiro,
-//     idServico,
-//     dataHoraServico
-//   );
-//   if (agendamento) {
-//     return agendamento;
-//   } else {
-//     throw { id: 404, message: "Serviço realizado não encontrado" };
-//   }
-// }
+  throw {
+    id: 400,
+    message: "Serviço realizado alterado não possui data hora ou id de serviço",
+  };
+}
+
+function deletar(idAgendamento, dataHoraServico) {
+  const agendamento = agendamento_repository.deletar(
+    idAgendamento,
+    dataHoraServico
+  );
+  if (agendamento) {
+    return agendamento;
+  } else {
+    throw { id: 404, message: "Serviço realizado não encontrado" };
+  }
+}
 
 module.exports = {
   listar,
   buscarPorId,
   buscarPorData,
   inserir,
-  // atualizar,
-  // deletar,
+  atualizar,
+  deletar,
 };

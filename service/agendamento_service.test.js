@@ -60,54 +60,30 @@ test("Função buscarPorData", () => {
   });
 });
 
-// test("Função inserir", () => {
-//   let casoFuncional = {
-//     idBabearia: 1,
+// test("Function inserir", () => {
+//   const agendamentoInserido = {
+//     idBarbearia: 1,
 //     idBarbeiro: 2,
 //     idServico: 1,
-//     dataHoraServico: "2024-07-09-09:30",
+//     dataHoraServico: "2024-07-09-09:35",
 //   };
-//   let casosFalhos = [
-//     // Serviço inválido
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 8,
-//       dataHoraServico: "2024-07-09-10:30",
-//     },
 
-//     // Dado faltando
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//     },
+//   const agendamentoInseridoEsperado = {
+//     idBarbearia: 1,
+//     idBarbeiro: 2,
+//     idServico: 1,
+//     dataHoraServico: "2024-07-09-09:35",
+//     idAgendamento: "1212024-07-09-09:35",
+//   };
 
-//     // Repetido
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-09-09:30",
-//     },
+//   const idAgendamento = `${agendamentoInseridoEsperado.idBarbearia}${agendamentoInseridoEsperado.idBarbeiro}${agendamentoInseridoEsperado.idServico}${agendamentoInseridoEsperado.dataHoraServico}`;
 
-//     // Fora do horário de funcionamento
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-09-06:00",
-//     },
-//   ];
-
-//   servicoRealizado_service.inserir(casoFuncional);
-//   expect(servicoRealizado_service.listar()).toContainEqual(casoFuncional);
-
-//   for (index in casosFalhos) {
-//     expect(() =>
-//       servicoRealizado_service.inserir(casosFalhos[index])
-//     ).toThrow();
-//   }
+//   agendamento_service
+//     .inserir(agendamentoInserido)
+//     .then(() => agendamento_service.buscarPorId(idAgendamento))
+//     .then((agendamento) => {
+//       expect(agendamento).toEqual(agendamentoInseridoEsperado);
+//     });
 // });
 
 // test("Função atualizar", () => {
@@ -126,7 +102,7 @@ test("Função buscarPorData", () => {
 //     },
 //   };
 
-//   servicoRealizado_service.atualizar(
+//   agendamento_service.atualizar(
 //     casoFuncional.servicoAAtualizar.idBabearia,
 //     casoFuncional.servicoAAtualizar.idBarbeiro,
 //     casoFuncional.servicoAAtualizar.idServico,
@@ -135,7 +111,7 @@ test("Função buscarPorData", () => {
 //   );
 
 //   expect(
-//     servicoRealizado_service.buscarPorKeyTabela(
+//     agendamento_service.buscarPorKeyTabela(
 //       casoFuncional.servicoAtualizado.idBabearia,
 //       casoFuncional.servicoAtualizado.idBarbeiro,
 //       casoFuncional.servicoAtualizado.idServico,
@@ -160,7 +136,7 @@ test("Função buscarPorData", () => {
 //   };
 
 //   expect(() =>
-//     servicoRealizado_service.atualizar(
+//     agendamento_service.atualizar(
 //       casoFalho.servicoAAtualizar.idBabearia,
 //       casoFalho.servicoAAtualizar.idBarbeiro,
 //       casoFalho.servicoAAtualizar.idServico,
@@ -186,7 +162,7 @@ test("Função buscarPorData", () => {
 //   };
 
 //   expect(() =>
-//     servicoRealizado_service.atualizar(
+//     agendamento_service.atualizar(
 //       casoFalho2.servicoAAtualizar.idBabearia,
 //       casoFalho2.servicoAAtualizar.idBarbeiro,
 //       casoFalho2.servicoAAtualizar.idServico,
@@ -212,7 +188,7 @@ test("Função buscarPorData", () => {
 //   };
 
 //   expect(() =>
-//     servicoRealizado_service.atualizar(
+//     agendamento_service.atualizar(
 //       casoFalho3.servicoAAtualizar.idBabearia,
 //       casoFalho3.servicoAAtualizar.idBarbeiro,
 //       casoFalho3.servicoAAtualizar.idServico,
@@ -237,7 +213,7 @@ test("Função buscarPorData", () => {
 //   };
 
 //   expect(() =>
-//     servicoRealizado_service.atualizar(
+//     agendamento_service.atualizar(
 //       casoFalho4.servicoAAtualizar.idBabearia,
 //       casoFalho4.servicoAAtualizar.idBarbeiro,
 //       casoFalho4.servicoAAtualizar.idServico,
@@ -263,7 +239,7 @@ test("Função buscarPorData", () => {
 //     };
 
 //     expect(() =>
-//       servicoRealizado_service.atualizar(
+//       agendamento_service.atualizar(
 //         casoFalho5.servicoAAtualizar.idBabearia,
 //         casoFalho5.servicoAAtualizar.idBarbeiro,
 //         casoFalho5.servicoAAtualizar.idServico,
@@ -281,7 +257,7 @@ test("Função buscarPorData", () => {
 //     dataHoraServico: "2024-07-09-09:30",
 //   };
 
-//   servicoRealizado_service.deletar(
+//   agendamento_service.deletar(
 //     casoFuncional.idBabearia,
 //     casoFuncional.idBarbeiro,
 //     casoFuncional.idServico,
@@ -289,7 +265,7 @@ test("Função buscarPorData", () => {
 //   );
 
 //   expect(() =>
-//     servicoRealizado_service.buscarPorKeyTabela(
+//     agendamento_service.buscarPorKeyTabela(
 //       casoFuncional.idBabearia,
 //       casoFuncional.idBarbeiro,
 //       casoFuncional.idServico,
@@ -304,7 +280,7 @@ test("Função buscarPorData", () => {
 //     dataHoraServico: "2024-07-09-09:30",
 //   };
 //   expect(() =>
-//     servicoRealizado_service.deletar(
+//     agendamento_service.deletar(
 //       casoFalho.idBabearia,
 //       casoFalho.idBarbeiro,
 //       casoFalho.idServico,
