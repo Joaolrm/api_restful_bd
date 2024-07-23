@@ -7,6 +7,12 @@ BEGIN
         DROP TABLE agendamento;
     END IF;
 
+    	    -- Verifica se a tabela de valorservico já existe
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'valorservico') THEN
+        -- Apaga a tabela existente
+        DROP TABLE valorservico;
+    END IF;
+
 
     -- Verifica se a tabela já existe
     IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'barbearia') THEN
@@ -72,7 +78,7 @@ BEGIN
 		
 	    -- Cria a tabela de agendamento
     CREATE TABLE agendamento (
-        idAgendamento VARCHAR(50) NOT NULL PRIMARY KEY,
+        idAgendamento VARCHAR(25) NOT NULL PRIMARY KEY,
         idBarbearia INT NOT NULL,
         idBarbeiro INT NOT NULL,
         idServico INT NOT NULL,
@@ -85,10 +91,30 @@ BEGIN
 	INSERT INTO 
 		agendamento (idAgendamento, idBarbearia, idBarbeiro, idServico, dataHoraServico)
 	VALUES
-		('1112024-07-07 19:30', 1, 1, 1, '2024-07-07 19:30'),
-		('1212024-07-07 20:00', 1, 2, 1, '2024-07-07 20:00'),
-		('1112024-07-08 19:30', 1, 1, 1, '2024-07-08 19:30'),
-		('1212024-07-08 19:30', 1, 2, 1, '2024-07-08 19:30');
+		('1112024-07-07-19:30', 1, 1, 1, '2024-07-07-19:30'),
+		('1212024-07-07-20:00', 1, 2, 1, '2024-07-07-20:00'),
+		('1112024-07-08-19:30', 1, 1, 1, '2024-07-08-19:30'),
+		('1212024-07-08-19:30', 1, 2, 1, '2024-07-08-19:30');
+
+        -- Cria a tabela de valorServico
+    CREATE TABLE valorServico (
+        idValorServico VARCHAR(9) NOT NULL PRIMARY KEY,
+        idBarbearia INT NOT NULL,
+        idBarbeiro INT NOT NULL,
+        idServico INT NOT NULL,
+        valorServico VARCHAR(10) NOT NULL,
+        FOREIGN KEY (idBarbearia) REFERENCES barbearia (idBarbearia),
+        FOREIGN KEY (idBarbeiro) REFERENCES barbeiro (idBarbeiro),
+        FOREIGN KEY (idServico) REFERENCES servico (idServico)
+    );
+    
+    INSERT INTO 
+        valorServico (idValorServico, idBarbearia, idBarbeiro, idServico, valorServico)
+    VALUES
+        ('111', 1, 1, 1, '20,00'),
+        ('121', 1, 2, 1, '20,00'),
+        ('211', 2, 1, 1, '20,00'),
+        ('221', 2, 2, 1, '20,00');
 		
 END $$;
 

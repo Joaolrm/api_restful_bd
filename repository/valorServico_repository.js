@@ -1,42 +1,10 @@
-let listaValorServico = [
-  {
-    idBabearia: 1,
-    idBarbeiro: 1,
-    idServico: 1,
-    valorServico: "20,00",
-  },
-  {
-    idBabearia: 1,
-    idBarbeiro: 2,
-    idServico: 1,
-    valorServico: "20,00",
-  },
-  {
-    idBabearia: 2,
-    idBarbeiro: 1,
-    idServico: 1,
-    valorServico: "20,00",
-  },
-  {
-    idBabearia: 2,
-    idBarbeiro: 2,
-    idServico: 1,
-    valorServico: "20,00",
-  },
-];
+const dataAccess = require("./data_access");
 
-function buscarPorKeyTabela(idBabearia, idBarbeiro, idServico) {
-  for (let valorServico of listaValorServico) {
-    if (
-      valorServico.idBabearia == idBabearia &&
-      valorServico.idBarbeiro == idBarbeiro &&
-      valorServico.idServico == idServico
-    ) {
-      return valorServico;
-    }
-  }
+async function buscarPorId(idValorServico) {
+  resultSet = dataAccess.queryExec("S", "select * from valorservico where idvalorservico = $1", [idValorServico]);
+  return resultSet;
 }
 
 module.exports = {
-  buscarPorKeyTabela,
+  buscarPorId,
 };

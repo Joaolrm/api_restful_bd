@@ -1,29 +1,8 @@
-let idGenerator = 4;
-let listaServicos = [
-  {
-    idServico: 1,
-    descricaoServico: "Corte simples",
-  },
-  {
-    idServico: 2,
-    descricaoServico: "Sobrancelha",
-  },
-  {
-    idServico: 3,
-    descricaoServico: "Corte tesoura",
-  },
-  {
-    idServico: 4,
-    descricaoServico: "Corte tesoura + maquina",
-  },
-];
+const dataAccess = require("./data_access");
 
-function buscarPorId(id) {
-  for (let servico of listaServicos) {
-    if (servico.idServico === id) {
-      return servico;
-    }
-  }
+async function buscarPorId(idServico) {
+  resultSet = dataAccess.queryExec("S", "select * from servico where idservico = $1", [idServico]);
+  return resultSet;
 }
 
 module.exports = {

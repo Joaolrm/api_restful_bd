@@ -1,35 +1,42 @@
-// const servicoRealizado_repository = require("./servicoRealizado_repository");
+const agendamento_repository = require("./agendamento_repository");
 
-// test("Function listar", () => {
-//   let listaEsperadaDoListar = [
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 1,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-07-19:30",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-07-20:00",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 1,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-08-19:30",
-//     },
-//     {
-//       idBabearia: 1,
-//       idBarbeiro: 2,
-//       idServico: 1,
-//       dataHoraServico: "2024-07-08-19:30",
-//     },
-//   ];
-//   expect(servicoRealizado_repository.listar()).toEqual(listaEsperadaDoListar);
-//   expect(servicoRealizado_repository.listar()).toHaveLength(4);
-// });
+test("Function listar", () => {
+  let listaEsperadaDoListar = [
+    {
+      idbarbearia: 1,
+      idbarbeiro: 1,
+      idservico: 1,
+      datahoraservico: "2024-07-07-19:30",
+      idagendamento: "1112024-07-07-19:30",
+    },
+    {
+      idbarbearia: 1,
+      idbarbeiro: 2,
+      idservico: 1,
+      datahoraservico: "2024-07-07-20:00",
+      idagendamento: "1212024-07-07-20:00",
+    },
+    {
+      idbarbearia: 1,
+      idbarbeiro: 1,
+      idservico: 1,
+      datahoraservico: "2024-07-08-19:30",
+      idagendamento: "1112024-07-08-19:30",
+    },
+    {
+      idbarbearia: 1,
+      idbarbeiro: 2,
+      idservico: 1,
+      datahoraservico: "2024-07-08-19:30",
+      idagendamento: "1212024-07-08-19:30",
+    },
+  ];
+
+  return agendamento_repository.listar().then((resultado) => {
+    expect(resultado).toEqual(listaEsperadaDoListar);
+    expect(resultado).toHaveLength(4);
+  });
+});
 
 // test("Function buscarPorData", () => {
 //   let listaEsperadaBuscarPorData = [
