@@ -54,6 +54,53 @@ test("Function buscarPorId", () => {
     });
 });
 
+test("Function buscarPorData", () => {
+  let listaEsperadaBuscarPorData = [
+    {
+      idAgendamento: "1112024-07-07-19:30",
+      barbearia: {
+        idBarbearia: 1,
+        nomeBarbearia: "Barbel",
+        cnpj: "99.777.777/0001-66",
+        horarioAbertura: "08:00",
+        horarioFechamento: "18:00",
+      },
+      barbeiro: {
+        idBarbeiro: 1,
+        nomeBarbeiro: "Roger",
+        cpf: "123.456.789-00",
+        telefone: "123456789",
+      },
+      servico: { idServico: 1, descricaoServico: "Corte simples" },
+      valorServico: { idValorServico: "111", valorServico: "20,00" },
+    },
+    {
+      idAgendamento: "1212024-07-07-20:00",
+      barbearia: {
+        idBarbearia: 1,
+        nomeBarbearia: "Barbel",
+        cnpj: "99.777.777/0001-66",
+        horarioAbertura: "08:00",
+        horarioFechamento: "18:00",
+      },
+      barbeiro: {
+        idBarbeiro: 2,
+        nomeBarbeiro: "João",
+        cpf: "987.654.321-00",
+        telefone: "987654321",
+      },
+      servico: { idServico: 1, descricaoServico: "Corte simples" },
+      valorServico: { idValorServico: "121", valorServico: "20,00" },
+    },
+  ];
+
+  return agendamento_repository
+    .buscarPorData("2024-07-07")
+    .then((resultado) => {
+      expect(resultado).toEqual(listaEsperadaBuscarPorData);
+    });
+});
+
 test("Function inserir", () => {
   const agendamentoInserido = {
     idBarbearia: 1,
@@ -74,144 +121,63 @@ test("Function inserir", () => {
 
   return agendamento_repository
     .inserir(agendamentoInserido)
-    .then(async () => {
-      return agendamento = await agendamento_repository.buscarPorId(
-        idAgendamento
-      );
-    })
-    .then(() => {
+    .then(() => agendamento_repository.buscarPorId(idAgendamento))
+    .then((agendamento) => {
       expect(agendamento).toEqual(agendamentoInseridoEsperado);
     });
 });
 
-// test("Function buscarPorData", () => {
-//   let listaEsperadaBuscarPorData = [
-//     {
-//       barbearia: {
-//         idBabearia: 1,
-//         nomeBarbearia: "Barbel",
-//       },
-//       barbeiro: {
-//         idBarbeiro: 1,
-//         nomeBarbeiro: "Roger",
-//       },
-//       servico: {
-//         idServico: 1,
-//         dataHoraServico: "2024-07-07-19:30",
-//         descricaoServico: "Corte simples",
-//         valorServico: "20,00",
-//       },
-//     },
-//     {
-//       barbearia: {
-//         idBabearia: 1,
-//         nomeBarbearia: "Barbel",
-//       },
-//       barbeiro: {
-//         idBarbeiro: 2,
-//         nomeBarbeiro: "João",
-//       },
-//       servico: {
-//         idServico: 1,
-//         dataHoraServico: "2024-07-07-20:00",
-//         descricaoServico: "Corte simples",
-//         valorServico: "20,00",
-//       },
-//     },
-//   ];
+test("Function deletar", () => {
+  const agendamentoEsperado = {
+    idBarbearia: 1,
+    idBarbeiro: 2,
+    idServico: 1,
+    dataHoraServico: "2024-07-08-19:30",
+    idAgendamento: "1212024-07-08-19:30",
+  };
 
-//   const resultado = servicoRealizado_repository.buscarPorData("2024-07-07");
+  return agendamento_repository
+    .buscarPorId(agendamentoEsperado.idAgendamento)
+    .then((localizar) => {
+      expect(localizar).toEqual(agendamentoEsperado);
+      return agendamento_repository.deletar(agendamentoEsperado.idAgendamento);
+    })
+    .then(() =>
+      agendamento_repository.buscarPorId(agendamentoEsperado.idAgendamento)
+    )
+    .then((naoLocalizar) => {
+      expect(naoLocalizar).toBeUndefined();
+    });
+});
 
-//   expect(resultado).toEqual(listaEsperadaBuscarPorData);
-//   expect(resultado).toHaveLength(2);
-// });
+test("Function atualizar", () => {
+  const agendamentoAAlterar = {
+    idBarbearia: 1,
+    idBarbeiro: 1,
+    idServico: 1,
+    dataHoraServico: "2024-07-07-19:30",
+    idAgendamento: "1112024-07-07-19:30",
+  };
 
-// test("Function buscarPorKeyTabela", () => {
-//   let servicoRealizadoEsperado = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-07-20:00",
-//   };
+  const agendamentoAlterado = {
+    idBarbearia: 1,
+    idBarbeiro: 1,
+    idServico: 1,
+    dataHoraServico: "2024-07-07-19:30",
+    idAgendamento: "1112024-07-07-19:30",
+  };
 
-//   const resultado = servicoRealizado_repository.buscarPorKeyTabela(
-//     1,
-//     2,
-//     1,
-//     "2024-07-07-20:00"
-//   );
+  let resultado = agendamento_repository
+    .atualizar(agendamentoAAlterar.idAgendamento, agendamentoAlterado)
+    .then((resultado) => {
+      expect(resultado).toEqual(agendamentoAlterado);
 
-//   expect(resultado).toEqual(servicoRealizadoEsperado);
-// });
-
-// test("Function atualizar", () => {
-//   let servicoRealizadoAnterior = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-07-20:00",
-//   };
-//   let servicoRealizadoAlterado = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-07-20:30",
-//   };
-//   servicoRealizado_repository.atualizar(
-//     servicoRealizadoAnterior.idBabearia,
-//     servicoRealizadoAnterior.idBarbeiro,
-//     servicoRealizadoAnterior.idServico,
-//     servicoRealizadoAnterior.dataHoraServico,
-//     servicoRealizadoAlterado
-//   );
-//   expect(
-//     servicoRealizado_repository.buscarPorKeyTabela(
-//       servicoRealizadoAlterado.idBabearia,
-//       servicoRealizadoAlterado.idBarbeiro,
-//       servicoRealizadoAlterado.idServico,
-//       servicoRealizadoAlterado.dataHoraServico
-//     )
-//   ).toEqual(servicoRealizadoAlterado);
-//   expect(
-//     servicoRealizado_repository.buscarPorKeyTabela(
-//       servicoRealizadoAnterior.idBabearia,
-//       servicoRealizadoAnterior.idBarbeiro,
-//       servicoRealizadoAnterior.idServico,
-//       servicoRealizadoAnterior.dataHoraServico
-//     )
-//   ).toBeUndefined();
-// });
-
-// test("Function deletar", () => {
-//   let servicoRealizadoDeletar = {
-//     idBabearia: 1,
-//     idBarbeiro: 2,
-//     idServico: 1,
-//     dataHoraServico: "2024-07-09-09:30",
-//   };
-
-//   expect(
-//     servicoRealizado_repository.buscarPorKeyTabela(
-//       servicoRealizadoDeletar.idBabearia,
-//       servicoRealizadoDeletar.idBarbeiro,
-//       servicoRealizadoDeletar.idServico,
-//       servicoRealizadoDeletar.dataHoraServico
-//     )
-//   ).toEqual(servicoRealizadoDeletar);
-
-//   servicoRealizado_repository.deletar(
-//     servicoRealizadoDeletar.idBabearia,
-//     servicoRealizadoDeletar.idBarbeiro,
-//     servicoRealizadoDeletar.idServico,
-//     servicoRealizadoDeletar.dataHoraServico
-//   );
-
-//   expect(
-//     servicoRealizado_repository.buscarPorKeyTabela(
-//       servicoRealizadoDeletar.idBabearia,
-//       servicoRealizadoDeletar.idBarbeiro,
-//       servicoRealizadoDeletar.idServico,
-//       servicoRealizadoDeletar.dataHoraServico
-//     )
-//   ).toBeUndefined();
-// });
+      return agendamento_repository.atualizar(
+        agendamentoAlterado.idAgendamento,
+        agendamentoAAlterar
+      );
+    })
+    .then((resultado) => {
+      expect(resultado).toEqual(agendamentoAAlterar);
+    });
+});

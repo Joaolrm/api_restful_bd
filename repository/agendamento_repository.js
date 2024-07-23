@@ -116,84 +116,65 @@ async function buscarPorData(data) {
   }
 
   let optional = {};
-  optional.value = [data];
+  optional.value = [data + "%"];
   optional.mapFunction = mapFunction;
 
   resultSet = dataAccess.queryExec("M", query, optional);
   return resultSet;
 }
 
-async function main() {
-  try {
-    const data = await buscarPorData("2024-07-07%");
-    console.log("Resultado:", data);
-  } catch (error) {
-    console.error("Erro:", error.message);
-  }
+async function deletar(idAgendamento) {
+  let optional = {};
+  optional.value = [idAgendamento];
+  resultSet = dataAccess.queryExec(
+    "S",
+    'delete from agendamento where "idAgendamento" = $1 returning * ',
+    optional
+  );
+  return resultSet;
 }
 
-main();
+async function atualizar(idAgendamento, agendamentoAlterado) {
+  const { idBarbearia, idBarbeiro, idServico, dataHoraServico } = agendamentoAlterado;
+  const idAgendamentoAlterado = `${idBarbearia}${idBarbeiro}${idServico}${dataHoraServico}`;
+  let optional = {};
+  optional.value = [
+    idAgendamento,
+    idBarbearia,
+    idBarbeiro,
+    idServico,
+    dataHoraServico,
+    idAgendamentoAlterado,
+  ];
 
-// function buscarPorKeyTabela(
-//   idBabearia,
-//   idBarbeiro,
-//   idServico,
-//   dataHoraServico
-// ) {
-//   for (let servicoRealizado of listaServicosRealizados) {
-//     if (
-//       servicoRealizado.idBabearia == idBabearia &&
-//       servicoRealizado.idBarbeiro == idBarbeiro &&
-//       servicoRealizado.idServico == idServico &&
-//       servicoRealizado.dataHoraServico == dataHoraServico
-//     ) {
-//       return servicoRealizado;
-//     }
-//   }
-// }
-
-// function atualizar(
-//   idBabearia,
-//   idBarbeiro,
-//   idServico,
-//   dataHoraServico,
-//   servicoRealizadoAlterado
-// ) {
-//   let servicoRealizado = buscarPorKeyTabela(
-//     idBabearia,
-//     idBarbeiro,
-//     idServico,
-//     dataHoraServico
-//   );
-//   if (servicoRealizado) {
-//     servicoRealizado.idBabearia = servicoRealizadoAlterado.idBabearia;
-//     servicoRealizado.idBarbeiro = servicoRealizadoAlterado.idBarbeiro;
-//     servicoRealizado.idServico = servicoRealizadoAlterado.idServico;
-//     servicoRealizado.dataHoraServico = servicoRealizadoAlterado.dataHoraServico;
-//   }
-//   return servicoRealizado;
-// }
-
-// function deletar(idBabearia, idBarbeiro, idServico, dataHoraServico) {
-//   let servicoRealizado;
-//   for (let indice in listaServicosRealizados) {
-//     if (
-//       listaServicosRealizados[indice].idBabearia == idBabearia &&
-//       listaServicosRealizados[indice].idBarbeiro == idBarbeiro &&
-//       listaServicosRealizados[indice].idServico == idServico &&
-//       listaServicosRealizados[indice].dataHoraServico == dataHoraServico
-//     ) {
-//       servicoRealizado = listaServicosRealizados.splice(indice, 1)[0];
-//     }
-//   }
-//   return servicoRealizado;
-// }
+  let agendamento = await buscarPorId(idAgendamento);
+  if (agendamento) {
+    resultSet = dataAccess.queryExec(
+      "S",
+      `UPDATE 
+        agendamento
+      SET
+        "idBarbearia" = $2,
+        "idBarbeiro" = $3,
+        "idServico" = $4,
+        "dataHoraServico" = $5,
+        "idAgendamento" = $6
+      WHERE 
+        "idAgendamento" = $1
+      RETURNING 
+        *;
+      `,
+      optional
+    );
+  }
+  return resultSet;
+}
 
 module.exports = {
   listar,
   buscarPorId,
-  inserir,
   buscarPorData,
-  // atualizar,
-  // deletar,
+  inserir,
+  deletar,
+  atualizar,
 };
